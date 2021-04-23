@@ -56,4 +56,14 @@ func main() {
 	numero += 15
 
 	fmt.Println(numero)
+
+	var resultadoNumero string
+
+	if numero > 5 {
+		resultadoNumero = "Maior que 5"
+	} else {
+		resultadoNumero = "Menor que 5"
+	}
+
+	fmt.Println(resultadoNumero)
 }
