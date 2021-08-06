@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"introduction-tests/enderecos"
 	"testing"
 )
@@ -21,10 +22,8 @@ func TestTipoEndereco(t *testing.T) {
 		result := enderecos.TipoDeEndereco(endereco)
 		expected := "Avenida"
 
-
 		AssertHelper(result, expected, t)
 	})
-
 
 	t.Run("Rua", func(t *testing.T) {
 		endereco := "Rua Augusta, 2356"
@@ -45,4 +44,13 @@ func TestContains(t *testing.T) {
 	expected := true
 
 	AssertHelper(result, expected, t)
+}
+
+func ExampleContains() {
+	endereco := "Avenida Cruzeiro do Sul, 3456"
+	result := enderecos.TipoDeEndereco(endereco)
+
+	fmt.Println(result)
+
+	// Output: Avenida
 }
