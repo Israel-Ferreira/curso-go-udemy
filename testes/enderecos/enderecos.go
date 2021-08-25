@@ -17,6 +17,11 @@ func TipoDeEndereco(endereco string) (typeElem string) {
 	}
 
 
+	if typeElem == "" {
+		typeElem = "Tipo Inválido"
+	}
+
+
 	return 
 }
 

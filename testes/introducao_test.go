@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+
+type Scenario struct {
+	givenAddress string
+	expectedAddress string
+}
+
 func AssertHelper(result, expected interface{}, t *testing.T) {
 	t.Helper()
 
@@ -14,6 +20,26 @@ func AssertHelper(result, expected interface{}, t *testing.T) {
 	}
 
 }
+
+
+
+func TestTipoEnderecoWithScenarios(t *testing.T){
+	scenarios := []Scenario{
+		{givenAddress: "Rua ABC", expectedAddress: "Rua"},
+		{givenAddress: "Avenida Brigadeiro Faria Lima, 2447", expectedAddress:"Avenida"},
+		{givenAddress: "Praça da Sé", expectedAddress: "Tipo Inválido"},
+		{givenAddress: "Jardim Botânico de Jundiaí", expectedAddress: "Tipo Inválido"},
+		{givenAddress: "Rodovia dos Imigrantes, Km. 23", expectedAddress: "Rodovia"},
+		{givenAddress: "Estrada do M'boi Mirim, km 12", expectedAddress: "Estrada" },
+	}
+
+
+	for _, scenario := range scenarios {
+		result := enderecos.TipoDeEndereco(scenario.givenAddress)
+		AssertHelper(result, scenario.expectedAddress, t)
+	}
+}
+
 
 func TestTipoEndereco(t *testing.T) {
 
@@ -25,10 +51,22 @@ func TestTipoEndereco(t *testing.T) {
 		AssertHelper(result, expected, t)
 	})
 
+	
+
 	t.Run("Rua", func(t *testing.T) {
 		endereco := "Rua Augusta, 2356"
 
 		result := enderecos.TipoDeEndereco(endereco)
+		expected := "Rua"
+
+		AssertHelper(result, expected, t)
+	})
+
+
+	t.Run("RUA CAPITALIZED", func(t *testing.T) {
+		endereco := "RUA DOS BOBOS"
+		result := enderecos.TipoDeEndereco(endereco)
+
 		expected := "Rua"
 
 		AssertHelper(result, expected, t)
