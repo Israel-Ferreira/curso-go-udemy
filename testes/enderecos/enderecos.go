@@ -12,7 +12,7 @@ func TipoDeEndereco(endereco string) (typeElem string) {
 		contains := Contains(endereco, tipo)
 
 		if contains {
-			typeElem = tipo
+			typeElem = strings.Title(tipo) 
 		}
 	}
 
