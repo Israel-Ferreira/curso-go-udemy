@@ -20,7 +20,7 @@ func TestTipoEndereco(t *testing.T) {
 	t.Run("Avenida", func(t *testing.T) {
 		endereco := "Avenida Paulista, 1890"
 		result := enderecos.TipoDeEndereco(endereco)
-		expected := "Avenida"
+		expected := "avenida"
 
 		AssertHelper(result, expected, t)
 	})
@@ -29,7 +29,17 @@ func TestTipoEndereco(t *testing.T) {
 		endereco := "Rua Augusta, 2356"
 
 		result := enderecos.TipoDeEndereco(endereco)
-		expected := "Rua"
+		expected := "rua"
+
+		AssertHelper(result, expected, t)
+	})
+
+
+	t.Run("Rodovia Anhaguera", func(t *testing.T) {
+		endereco := "Rodovia Anhanguera, Km 60"
+
+		result := enderecos.TipoDeEndereco(endereco)
+		expected := "rodovia"
 
 		AssertHelper(result, expected, t)
 	})

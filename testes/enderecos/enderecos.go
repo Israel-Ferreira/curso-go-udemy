@@ -5,9 +5,10 @@ import "strings"
 
 
 func TipoDeEndereco(endereco string) (typeElem string) {
-	tiposValidos := []string{"Avenida", "Rua",  "Estrada", "Rodovia"}
+	tiposValidos := []string{"avenida", "rua",  "estrada", "rodovia"}
 
 	for _, tipo := range tiposValidos {
+		endereco = strings.ToLower(endereco);
 		contains := Contains(endereco, tipo)
 
 		if contains {
