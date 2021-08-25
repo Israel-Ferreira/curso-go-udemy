@@ -31,6 +31,7 @@ func TestTipoEnderecoWithScenarios(t *testing.T){
 		{givenAddress: "Jardim Botânico de Jundiaí", expectedAddress: "Tipo Inválido"},
 		{givenAddress: "Rodovia dos Imigrantes, Km. 23", expectedAddress: "Rodovia"},
 		{givenAddress: "Estrada do M'boi Mirim, km 12", expectedAddress: "Estrada" },
+		{givenAddress: "", expectedAddress: "Tipo Inválido"},
 	}
 
 
