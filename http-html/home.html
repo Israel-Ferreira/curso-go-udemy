@@ -1,25 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Html GO!!!</title>
 </head>
+
 <body>
     <header>
         <h1>Página Principal</h1>
     </header>
 
     <main>
+        <marquee>
+            <h2>Seja Bem vindo, {{ .Name }}</h2>
+        </marquee>
+
         <div class="container">
             <h2>Teste</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore a consequatur placeat vero voluptatem atque molestiae facilis repellat sequi quis porro quidem, voluptates laudantium rerum est tempore! Corrupti, odit. Voluptatibus.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore a consequatur placeat vero voluptatem
+                atque molestiae facilis repellat sequi quis porro quidem, voluptates laudantium rerum est tempore!
+                Corrupti, odit. Voluptatibus.</p>
+        </div>
+
+        <div class="container">
+            <h2>Nome: {{ .Name }}</h2>
+            <h3>Idade: {{ .Idade }}</h3>
         </div>
     </main>
 
     <footer>
         <p>&copy;</p>
     </footer>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+
+        body {
+            margin: 0;
+            background-color: rgb(51, 44, 44);
+            color: #fff;
+        }
+
+
+        header {
+            background-color: red;
+            color: #fff;
+            align-items: center;
+            height: 25vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+
+    </style>
 </body>
+
 </html>

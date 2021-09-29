@@ -9,12 +9,24 @@ import (
 
 var templates *template.Template
 
+
+type Usuario struct {
+	Name string
+	Idade int
+}
+
 func main() {
 
 	templates = template.Must(template.ParseGlob("*.html"))
 
 	http.HandleFunc("/home",func(rw http.ResponseWriter, r *http.Request) {
-		templates.ExecuteTemplate(rw, "home.html", nil)
+
+		u := Usuario{
+			Name: "Example",
+			Idade: 22,
+		}
+
+		templates.ExecuteTemplate(rw, "home.html", u)
 	})
 
 
