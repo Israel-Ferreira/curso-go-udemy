@@ -3,18 +3,13 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"go-crud-api/models"
 	"go-crud-api/repositories"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 )
 
 func BuscarUsuarios(rw http.ResponseWriter, r *http.Request) {
-	db, err := repositories.ConnectDb("golang2", "golang2", "localhost", "33406", "devbook")
+	repo, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -22,9 +17,7 @@ func BuscarUsuarios(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	defer db.Close()
-
-	repo := repositories.NewUsuarioRepo(db)
+	defer repo.CloseDbConnection()
 
 	usuarios, err := repo.FindAll()
 
@@ -43,23 +36,21 @@ func BuscarUsuarios(rw http.ResponseWriter, r *http.Request) {
 }
 
 func BuscarUsuario(rw http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-
-	ID, err := strconv.ParseUint(params["id"], 10, 32)
+	ID, err := getIdParam(r)
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	db, err := repositories.ConnectDb("golang2", "golang2", "localhost", "33406", "devbook")
+	repo, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	repo := repositories.NewUsuarioRepo(db)
+	defer repo.CloseDbConnection()
 
 	usuario, err := repo.FindById(ID)
 
@@ -77,35 +68,27 @@ func BuscarUsuario(rw http.ResponseWriter, r *http.Request) {
 }
 
 func InsertUser(rw http.ResponseWriter, r *http.Request) {
-	var user models.Usuario
+	// var user models.Usuario
 
 	defer r.Body.Close()
 
-	body, err := ioutil.ReadAll(r.Body)
+	usuario, err := deserializeUserBody(r)
 
 	if err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	if err = json.Unmarshal(body, &user); err != nil {
 		rw.WriteHeader(http.StatusBadRequest)
 		rw.Write([]byte(err.Error()))
-
 		return
 	}
 
-	db, err := repositories.ConnectDb("golang2", "golang2", "localhost", "33406", "devbook")
+	usuarioRepo, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	defer db.Close()
+	defer usuarioRepo.CloseDbConnection()
 
-	usuarioRepo := repositories.NewUsuarioRepo(db)
-
-	if err = usuarioRepo.CreateUser(user); err != nil {
+	if err = usuarioRepo.CreateUser(usuario); err != nil {
 		fmt.Println(err)
 		rw.WriteHeader(500)
 		return
@@ -128,4 +111,43 @@ func InsertUser(rw http.ResponseWriter, r *http.Request) {
 
 	rw.WriteHeader(http.StatusCreated)
 	rw.Write(msgInBytes)
+}
+
+func UpdateUser(rw http.ResponseWriter, r *http.Request) {
+
+	defer r.Body.Close()
+
+	ID, err := getIdParam(r)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	body, err := deserializeUserBody(r)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	db, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
+
+	if err != nil {
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	defer db.CloseDbConnection()
+
+	if err = db.FindByIdAndUpdate(int(ID), body); err != nil {
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	rw.WriteHeader(http.StatusNoContent)
+}
+
+func DeleteUser(rw http.ResponseWriter, r *http.Request) {
+	// ID, err := getIdParam(r)
 }

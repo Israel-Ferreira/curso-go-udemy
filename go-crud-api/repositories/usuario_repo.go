@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"go-crud-api/models"
 )
 
@@ -13,6 +14,13 @@ func NewUsuarioRepo(db *sql.DB) UsuarioRepo {
 	return UsuarioRepo{Db: db}
 }
 
+
+func (u UsuarioRepo) CloseDbConnection()  {
+	u.Db.Close()
+}
+
+
+// FindById Retorna um usuario pelo id informado
 func (u UsuarioRepo) FindById(id uint64) (models.Usuario, error) {
 	linha, err := u.Db.Query("select * from usuarios where id = ?", id)
 
@@ -34,6 +42,7 @@ func (u UsuarioRepo) FindById(id uint64) (models.Usuario, error) {
 
 }
 
+// FindAll retorna todos os usuarios do banco de dados
 func (u UsuarioRepo) FindAll() ([]models.Usuario, error) {
 	lns, err := u.Db.Query("select * from usuarios")
 
@@ -58,7 +67,9 @@ func (u UsuarioRepo) FindAll() ([]models.Usuario, error) {
 	return usuarios, nil
 }
 
+// CreateUser cria o usuario no banco de dados
 func (u UsuarioRepo) CreateUser(user models.Usuario) error {
+
 	stmt, err := u.Db.Prepare(
 		`insert into usuarios(nome, email) values (?, ?)`,
 	)
@@ -82,4 +93,36 @@ func (u UsuarioRepo) CreateUser(user models.Usuario) error {
 
 	return nil
 
+}
+
+func (u UsuarioRepo) FindByIdAndUpdate(id int, user models.Usuario) (error) {
+	
+	stmt, err := u.Db.Prepare(
+		"update usuarios set nome =  ?, email = ? where id = ?",
+	)
+
+	if err != nil {
+		return err
+	}
+
+
+	defer stmt.Close()
+
+
+	fmt.Println("Usuario: ", user)
+	fmt.Println("ID: ", id)
+
+	_, err = stmt.Exec(
+		user.Nome,
+		user.Email,
+		id,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	
+
+	return nil
 }

@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -20,5 +21,16 @@ func ConnectDb(username string, password string, host string, port string, datab
 	}
 
 	return dbConn, nil
+
+}
+
+func CreateUserRepo(username, password, host, port, database string) (UsuarioRepo, error) {
+	db, err := ConnectDb(username, password, host, port, database)
+
+	if err != nil {
+		return UsuarioRepo{}, err
+	}
+
+	return NewUsuarioRepo(db), nil
 
 }

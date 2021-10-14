@@ -20,6 +20,9 @@ func main() {
 
 	router.HandleFunc("/usuarios/{id}", controllers.BuscarUsuario).Methods(http.MethodGet)
 
+	router.HandleFunc("/usuarios/{id}", controllers.DeleteUser).Methods(http.MethodDelete)
+
+	router.HandleFunc("/usuarios/{id}", controllers.UpdateUser).Methods(http.MethodPut)
 	
 
 	fmt.Println("Escutando na porta :5000")
