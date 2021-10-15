@@ -27,6 +27,8 @@ func BuscarUsuarios(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	rw.Header().Set("Content-Type", "application/json")
+
 	if err = json.NewEncoder(rw).Encode(usuarios); err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		rw.Write([]byte("Erro ao serializar o json"))
@@ -60,10 +62,14 @@ func BuscarUsuario(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	rw.Header().Set("Content-Type", "application/json")
+
 	if err = json.NewEncoder(rw).Encode(usuario); err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	
 
 }
 
@@ -109,6 +115,7 @@ func InsertUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	rw.Header().Set("Content-Type", "application/json")
 	rw.WriteHeader(http.StatusCreated)
 	rw.Write(msgInBytes)
 }
@@ -149,5 +156,23 @@ func UpdateUser(rw http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUser(rw http.ResponseWriter, r *http.Request) {
-	// ID, err := getIdParam(r)
+	ID, err := getIdParam(r)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	repo, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
+
+	if err != nil {
+		rw.WriteHeader(http.StatusAccepted)
+	}
+
+	if err = repo.DeleteById(int(ID)); err != nil {
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	rw.WriteHeader(http.StatusNoContent)
 }

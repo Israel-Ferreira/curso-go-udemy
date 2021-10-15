@@ -14,11 +14,9 @@ func NewUsuarioRepo(db *sql.DB) UsuarioRepo {
 	return UsuarioRepo{Db: db}
 }
 
-
-func (u UsuarioRepo) CloseDbConnection()  {
+func (u UsuarioRepo) CloseDbConnection() {
 	u.Db.Close()
 }
-
 
 // FindById Retorna um usuario pelo id informado
 func (u UsuarioRepo) FindById(id uint64) (models.Usuario, error) {
@@ -95,8 +93,8 @@ func (u UsuarioRepo) CreateUser(user models.Usuario) error {
 
 }
 
-func (u UsuarioRepo) FindByIdAndUpdate(id int, user models.Usuario) (error) {
-	
+func (u UsuarioRepo) FindByIdAndUpdate(id int, user models.Usuario) error {
+
 	stmt, err := u.Db.Prepare(
 		"update usuarios set nome =  ?, email = ? where id = ?",
 	)
@@ -105,9 +103,7 @@ func (u UsuarioRepo) FindByIdAndUpdate(id int, user models.Usuario) (error) {
 		return err
 	}
 
-
 	defer stmt.Close()
-
 
 	fmt.Println("Usuario: ", user)
 	fmt.Println("ID: ", id)
@@ -122,7 +118,29 @@ func (u UsuarioRepo) FindByIdAndUpdate(id int, user models.Usuario) (error) {
 		return err
 	}
 
-	
-
 	return nil
+}
+
+func (u UsuarioRepo) DeleteById(id int) error {
+	stmt, err := u.Db.Prepare(
+		"delete from usuarios where id = ?",
+	)
+
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(
+		id,
+	)
+
+	if err != nil {
+		return err
+	}
+
+
+	return	nil
 }
