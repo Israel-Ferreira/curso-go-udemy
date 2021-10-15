@@ -6,10 +6,42 @@ import (
 	"go-crud-api/repositories"
 	"log"
 	"net/http"
+	"os"
 )
 
+func LoadDbEnvVars() (dbUsername, dbPassword, dbHost, dbPort, dbName string) {
+
+	if os.Getenv("GO_CRUD_DB_USERNAME") != "" {
+		dbUsername = os.Getenv("GO_CRUD_DB_USERNAME")
+	}
+
+	if os.Getenv("GO_CRUD_DB_PORT") != "" {
+		dbPort = os.Getenv("GO_CRUD_DB_PORT")
+	}
+
+	if os.Getenv("GO_CRUD_DB_HOST") != "" {
+		dbHost = os.Getenv("GO_CRUD_DB_HOST")
+	}
+
+	if os.Getenv("GO_CRUD_DB") != "" {
+		dbName = os.Getenv("GO_CRUD_DB")
+	}
+
+	if os.Getenv("GO_CRUD_DB_PASSWORD") != "" {
+		dbPassword = os.Getenv("GO_CRUD_DB_PASSWORD")
+	}
+
+	return
+
+}
+
 func BuscarUsuarios(rw http.ResponseWriter, r *http.Request) {
-	repo, err := repositories.CreateUserRepo("golang2", "golang2", "localhost", "33406", "devbook")
+
+	username, password, host, port, db := LoadDbEnvVars()
+	
+	fmt.Println(LoadDbEnvVars())
+
+	repo, err := repositories.CreateUserRepo(username, password, host, port, db)
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -68,8 +100,6 @@ func BuscarUsuario(rw http.ResponseWriter, r *http.Request) {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	
 
 }
 

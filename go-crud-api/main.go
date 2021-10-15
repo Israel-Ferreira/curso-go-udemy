@@ -7,10 +7,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	fmt.Println("CRUD Go Lang")
+
+	godotenv.Load()
 
 	router := mux.NewRouter()
 
